@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>☁️ 關西藍天輕旅 9 日 8 夜旅行助手</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sky: {
+              50: '#F0F8FF',
+              100: '#E1F0FE',
+              200: '#BAE0FD',
+              300: '#7CC4FA',
+              400: '#38A4F8',
+              500: '#0E86E7',
+              600: '#0268C2',
+              700: '#03539E'
+            },
+            butter: {
+              50: '#FEFDF0',
+              100: '#FFFCE1',
+              200: '#FFF8B8',
+              300: '#FEF082',
+              400: '#FDE047',
+              500: '#FACC15',
+              600: '#CA8A04'
+            },
+            cloud: '#FFFFFF',
+            slateText: '#2C3E50',
+            slateMuted: '#6B7E93'
+          },
+          boxShadow: {
+            'cute': '0 8px 24px -4px rgba(14, 134, 231, 0.16), 0 4px 10px -2px rgba(250, 204, 21, 0.12)',
+            'soft': '0 4px 16px -2px rgba(44, 62, 80, 0.05)',
+            'sunny': '0 6px 20px -2px rgba(250, 204, 21, 0.3)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+    
+    * {
+      font-family: 'Kosugi Maru', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #EBF5FB;
+      background-image: radial-gradient(#BAE0FD 0.8px, transparent 0.8px), radial-gradient(#BAE0FD 0.8px, #EBF5FB 0.8px);
+      background-size: 26px 26px;
+      background-position: 0 0, 13px 13px;
+      color: #2C3E50;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F0F8FF;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #BAE0FD;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #7CC4FA;
+    }
+
+    .tab-content {
+      display: none;
+      animation: tabFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .settled-item {
+      text-decoration: line-through;
+      opacity: 0.5;
+      filter: grayscale(60%);
+    }
+
+    .cloud-pill {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 2px 8px rgba(14, 134, 231, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-start sm:py-6 sm:px-4">
+
+  <!-- Mobile Frame Container -->
+  <div id="appContainer" class="w-full max-w-[480px] min-h-screen sm:min-h-[860px] bg-sky-50 sm:rounded-[36px] shadow-2xl flex flex-col relative overflow-hidden border-0 sm:border-4 border-white">
+    
+    <!-- Top Sticky Sky Bar -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-sky-100 px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="relative">
+            <span class="text-2xl animate-bounce">☀️</span>
+            <span class="text-xs absolute -bottom-1 -right-1">☁️</span>
+          </div>
+          <div>
+            <h1 class="text-base font-bold text-slateText tracking-wide flex items-center gap-1.5">
+              關西藍天輕旅 <span class="text-[11px] text-sky-700 bg-sky-100 px-2 py-0.5 rounded-full font-bold">9D8N</span>
+            </h1>
+            <p class="text-[10px] text-slateMuted">10/24 – 11/01 大阪・京都・神戶</p>
+          </div>
+        </div>
+
+        <!-- Real-time LocalStorage State Badge -->
+        <div id="saveIndicator" class="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-butter-100 text-[11px] font-bold text-butter-600 border border-butter-300 transition-all duration-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span id="saveStatusText">💾 已儲存</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Scrollable Body Area -->
+    <main class="flex-1 overflow-y-auto px-4 py-3 pb-24 space-y-4">
+      
+      <!-- ============================================== -->
+      <!-- TAB 1: 行程表 (Itinerary) -->
+      <!-- ============================================== -->
+      <section id="tab-itinerary" class="tab-content active space-y-3.5">
+        
+        <!-- Day Horizontal Scroll Pills -->
+        <div class="bg-white p-2.5 rounded-2xl shadow-soft border border-sky-100">
+          <div class="text-[11px] font-bold text-sky-600 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1">🗓️ 選擇日程</span>
+            <span id="daySummaryBadge" class="text-[10px] text-slateMuted font-normal">Day 1（10/24）</span>
+          </div>
+          <div id="daySelectorList" class="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
+            <!-- Injected dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Current Day Info Banner (Sky Blue + Butter Yellow accent) -->
+        <div id="currentDayHeader" class="bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 p-4 rounded-2xl text-white shadow-cute relative overflow-hidden">
+          <div class="absolute right-1 -bottom-2 text-6xl opacity-15 select-none pointer-events-none">✈️</div>
+          <div class="flex justify-between items-start relative z-10">
+            <div>
+              <span id="bannerDayTag" class="text-[10px] tracking-wider uppercase bg-butter-300 text-sky-800 px-2.5 py-0.5 rounded-full font-bold shadow-xs">DAY 1</span>
+              <h2 id="bannerDateTitle" class="text-lg font-bold mt-1.5 text-white">10 月 24 日（六）</h2>
+              <p id="bannerDayDesc" class="text-xs text-sky-50 mt-0.5">抵達大阪 ➔ 民宿入住 ➔ 周邊地道晚餐</p>
+            </div>
+            <div class="flex flex-col gap-1.5 items-end">
+              <button onclick="openAddItineraryModal()" class="bg-white text-sky-600 active:scale-95 text-xs font-bold px-3 py-1.5 rounded-xl shadow-soft flex items-center gap-1 transition-all border border-sky-100">
+                <span>➕</span> 加行程
+              </button>
+              <button onclick="toggleDayNoteBox()" class="bg-butter-300 text-sky-800 active:scale-95 text-[10px] font-bold px-2.5 py-1 rounded-xl shadow-xs flex items-center gap-1 transition-all">
+                <span>📝</span> 當日備忘
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Custom Notes Container -->
+        <div id="dayNoteContainer" class="hidden bg-butter-50 p-3 rounded-2xl border border-butter-200 shadow-soft space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-butter-600">
+            <span>📝 當天隨手備忘筆記</span>
+            <button onclick="saveCurrentDayNote()" class="bg-butter-400 text-slateText px-2 py-0.5 rounded-lg text-[10px]">儲存筆記</button>
+          </div>
+          <textarea id="dayNoteTextarea" rows="2" placeholder="例如：早餐自備麵包、注意長輩保暖圍巾、出門前檢查護照..." class="w-full text-xs p-2 rounded-xl bg-white border border-butter-200 focus:outline-none focus:ring-1 focus:ring-butter-400"></textarea>
+        </div>
+
+        <!-- Activities List for Selected Day -->
+        <div id="activitiesContainer" class="space-y-3">
+          <!-- Dynamically populated activities cards -->
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: 記帳分帳 (Split Bill) -->
+      <!-- ============================================== -->
+      <section id="tab-billing" class="tab-content space-y-4">
+        
+        <!-- Member Management Header Card -->
+        <div class="bg-white p-3.5 rounded-2xl shadow-soft border border-sky-100 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-base">👥</span>
+              <h3 class="text-xs font-bold text-slateText">同行旅伴成員 (<span id="memberCount">3</span> 人)</h3>
+            </div>
+            <button onclick="openMemberModal()" class="text-xs text-sky-600 font-bold hover:underline bg-sky-50 px-2.5 py-1 rounded-xl border border-sky-200">
+              ⚙️ 管理名單
+            </button>
+          </div>
+          <div id="membersPills" class="flex flex-wrap gap-1.5">
+            <!-- Member badges -->
+          </div>
+        </div>
+
+        <!-- Add Expense & Settle Actions -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="openAddExpenseModal()" class="bg-gradient-to-r from-sky-400 to-sky-500 text-white p-3 rounded-2xl shadow-cute flex flex-col items-center justify-center active:scale-95 transition-transform border border-sky-300">
+            <span class="text-xl mb-1">💸</span>
+            <span class="text-xs font-bold">記錄一筆消費</span>
+            <span class="text-[10px] text-sky-100">人均/分開付・雙幣支援</span>
+          </button>
+          <button onclick="settleAllExpenses()" class="bg-gradient-to-r from-butter-200 to-butter-300 text-sky-800 p-3 rounded-2xl shadow-soft flex flex-col items-center justify-center active:scale-95 transition-transform border border-butter-400">
+            <span class="text-xl mb-1">✨</span>
+            <span class="text-xs font-bold">一鍵統一結清</span>
+            <span class="text-[10px] text-sky-700">歸零欠款並生成存檔</span>
+          </button>
+        </div>
+
+        <!-- Smart Debt Settlement Result Card (誰應付誰多少) -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border-2 border-sky-200 space-y-3">
+          <div class="flex items-center justify-between border-b border-sky-100 pb-2">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-base">⚖️</span>
+              <h3 class="text-xs font-bold text-slateText">智能互扣結算（誰應該付誰）</h3>
+            </div>
+            <span class="text-[10px] bg-butter-100 text-butter-600 px-2 py-0.5 rounded-full font-bold border border-butter-200">已扣除已結清項</span>
+          </div>
+
+          <div id="debtPlanList" class="space-y-2">
+            <!-- Debt instructions: "A 應付 B ¥XXX (HK$YYY)" -->
+          </div>
+
+          <!-- Dual Export Buttons -->
+          <div class="pt-2 flex gap-2">
+            <button onclick="exportBillText()" class="flex-1 bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold py-2 rounded-xl text-center active:scale-95 transition-all">
+              📋 複製文字明細
+            </button>
+            <button onclick="generateReceiptImage()" class="flex-1 bg-butter-100 hover:bg-butter-200 border border-butter-300 text-sky-800 text-xs font-bold py-2 rounded-xl text-center active:scale-95 transition-all shadow-xs">
+              🖼️ 匯出收據圖片
+            </button>
+          </div>
+        </div>
+
+        <!-- Expense History List Header & Items -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <h4 class="text-xs font-bold text-slateText">📜 消費記錄清單 (<span id="expenseTotalCount">0</span> 筆)</h4>
+            <span class="text-[11px] text-slateMuted">點擊「✓ 已結清」劃線排除</span>
+          </div>
+
+          <div id="expensesContainer" class="space-y-2.5">
+            <!-- Dynamic Expense Cards -->
+          </div>
+        </div>
+
+        <!-- Settlement History Archive -->
+        <div class="bg-white p-3 rounded-2xl shadow-soft border border-sky-100">
+          <h4 class="text-xs font-bold text-slateText mb-2 flex items-center justify-between">
+            <span>🕰️ 歷史結清記錄存檔</span>
+            <span id="settlementHistoryCount" class="text-[10px] text-slateMuted">0 筆記錄</span>
+          </h4>
+          <div id="settlementHistoryList" class="text-[11px] text-slateMuted space-y-1.5 max-h-36 overflow-y-auto">
+            <p class="text-center py-2 text-gray-400">暫無結算歷史</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: 匯率換算 (Exchange Rate) -->
+      <!-- ============================================== -->
+      <section id="tab-converter" class="tab-content space-y-4">
+        
+        <!-- Rate Settings Card -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-xl">💱</span>
+              <h3 class="text-xs font-bold text-slateText">匯率基準設定</h3>
+            </div>
+            <span class="text-[11px] text-sky-600 font-bold bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200" id="currentRateLabel">100 JPY ≈ 5.20 HKD</span>
+          </div>
+
+          <div class="flex items-center space-x-2 bg-sky-50 p-2.5 rounded-xl border border-sky-200">
+            <span class="text-xs text-slateMuted whitespace-nowrap">1 JPY =</span>
+            <input type="number" id="baseRateInput" step="0.0001" min="0.01" max="0.2" value="0.0520" 
+              class="w-full bg-white border border-sky-300 rounded-lg px-2.5 py-1 text-sm font-bold text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              oninput="handleBaseRateChange(this.value)" />
+            <span class="text-xs text-slateMuted font-bold">HKD</span>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="flex items-center space-x-2 text-[11px]">
+            <span class="text-slateMuted">常用快捷：</span>
+            <button onclick="setQuickRate(0.050)" class="px-2 py-0.5 rounded-md bg-sky-100 text-sky-700 hover:bg-sky-200">0.050</button>
+            <button onclick="setQuickRate(0.052)" class="px-2 py-0.5 rounded-md bg-butter-200 text-butter-600 font-bold hover:bg-butter-300">0.052</button>
+            <button onclick="setQuickRate(0.054)" class="px-2 py-0.5 rounded-md bg-sky-100 text-sky-700 hover:bg-sky-200">0.054</button>
+          </div>
+        </div>
+
+        <!-- Bidirectional Real-time Converter -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 space-y-4">
+          <h3 class="text-xs font-bold text-slateText">⚡ 即時雙向計算器</h3>
+
+          <!-- JPY Input -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted flex items-center justify-between">
+              <span>🇯🇵 日圓 (JPY ¥)</span>
+              <span class="text-[10px] text-sky-500 font-normal">輸入日幣金額</span>
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-base font-bold text-sky-500">¥</span>
+              <input type="number" id="converterJPY" placeholder="1000" 
+                class="w-full pl-8 pr-3 py-2 bg-sky-50/60 border border-sky-200 rounded-xl text-base font-bold text-slateText focus:outline-none focus:border-sky-400"
+                oninput="calcJPYtoHKD(this.value)" />
+            </div>
+          </div>
+
+          <!-- Swap Indicator Divider -->
+          <div class="flex justify-center -my-2">
+            <span class="bg-butter-200 text-sky-800 text-xs px-3 py-1 rounded-full border border-butter-300 font-bold shadow-xs">⇅ 換算</span>
+          </div>
+
+          <!-- HKD Input -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted flex items-center justify-between">
+              <span>🇭🇰 港幣 (HKD $)</span>
+              <span class="text-[10px] text-sky-500 font-normal">輸入港幣金額</span>
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-base font-bold text-butter-500">$</span>
+              <input type="number" id="converterHKD" placeholder="52" 
+                class="w-full pl-8 pr-3 py-2 bg-sky-50/60 border border-sky-200 rounded-xl text-base font-bold text-slateText focus:outline-none focus:border-sky-400"
+                oninput="calcHKDtoJPY(this.value)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Shopping Cheat Sheet -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 space-y-2">
+          <h3 class="text-xs font-bold text-slateText flex items-center gap-1.5">
+            <span>🛍️</span> 購物標價快速換算表
+          </h3>
+          <div class="grid grid-cols-2 gap-2 text-xs" id="quickCheatSheet">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: 設定與備份 (Settings & Backup) -->
+      <!-- ============================================== -->
+      <section id="tab-settings" class="tab-content space-y-4">
+        
+        <!-- Storage Status Information -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 space-y-2">
+          <h3 class="text-xs font-bold text-slateText flex items-center gap-1.5">
+            <span>💾</span> 資料儲存機制 (localStorage)
+          </h3>
+          <p class="text-xs text-slateMuted leading-relaxed">
+            所有行程備註、記帳項目、結清狀態與匯率設定皆即時儲存於您的手機或電腦瀏覽器中，刷新網頁或離線使用皆自動無縫還原。
+          </p>
+          <div class="p-2.5 bg-sky-50 rounded-xl text-[11px] text-sky-700 flex justify-between items-center border border-sky-200">
+            <span>資料庫版本：v2.0.0 (Sky & Butter)</span>
+            <span class="font-bold text-emerald-600">● 運行正常</span>
+          </div>
+        </div>
+
+        <!-- Backup & Restore Actions -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 space-y-3">
+          <h3 class="text-xs font-bold text-slateText">📦 備份與共用</h3>
+
+          <div class="space-y-2">
+            <button onclick="exportJSONBackup()" class="w-full bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+              <span>📥</span> 匯出完整備份檔案 (.json)
+            </button>
+            <label class="w-full bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all">
+              <span>📤</span> 匯入還原備份檔案
+              <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importJSONBackup(event)" />
+            </label>
+          </div>
+
+          <div class="pt-2 border-t border-sky-100">
+            <button onclick="confirmResetDefaults()" class="w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+              <span>🔄</span> 重置為預設 9 日推薦行程
+            </button>
+          </div>
+        </div>
+
+        <!-- Accommodation Details Memo Card -->
+        <div class="bg-white p-4 rounded-2xl shadow-soft border border-sky-100 text-xs space-y-2 text-slateMuted">
+          <h4 class="font-bold text-slateText flex items-center gap-1">
+            <span>🏡</span> 民宿詳細資料備忘
+          </h4>
+          <p>• <strong>名稱</strong>：「栄•吉」</p>
+          <p>• <strong>地址</strong>：大阪市西成區花園南 2-6-20</p>
+          <p>• <strong>機場交通</strong>：南海電鐵直達「天下茶屋站」，特急 39 分鐘，西口平路步行 4 分鐘</p>
+          <p>• <strong>周邊設施</strong>：全家便利商店 (1分)、Gusto家庭餐廳 (3分)、Life 大型超市 (5分)</p>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Native Mobile Style Bottom Navigation Bar -->
+    <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-sky-200 py-2 px-3 z-30 flex justify-around items-center">
+      <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-sky-600 font-bold transition-all">
+        <span class="text-xl">📅</span>
+        <span class="text-[10px] mt-0.5">行程表</span>
+      </button>
+
+      <button onclick="switchTab('billing')" id="nav-billing" class="nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-slateMuted font-medium hover:text-sky-500 transition-all">
+        <span class="text-xl">💰</span>
+        <span class="text-[10px] mt-0.5">記帳分帳</span>
+      </button>
+
+      <button onclick="switchTab('converter')" id="nav-converter" class="nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-slateMuted font-medium hover:text-sky-500 transition-all">
+        <span class="text-xl">💱</span>
+        <span class="text-[10px] mt-0.5">匯率換算</span>
+      </button>
+
+      <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-slateMuted font-medium hover:text-sky-500 transition-all">
+        <span class="text-xl">⚙️</span>
+        <span class="text-[10px] mt-0.5">設定備份</span>
+      </button>
+    </nav>
+
+    <!-- Toast Notification Banner -->
+    <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slateText/90 text-white text-xs px-4 py-2 rounded-full shadow-lg pointer-events-none opacity-0 transition-opacity duration-300 flex items-center space-x-2">
+      <span id="toastIcon">☁️</span>
+      <span id="toastMessage">操作成功</span>
+    </div>
+
+    <!-- Custom Confirmation Modal (Replaces window.confirm) -->
+    <div id="confirmModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-xs w-full shadow-2xl space-y-4 border-2 border-sky-200">
+        <div class="text-center space-y-2">
+          <span class="text-3xl">⚠️</span>
+          <h4 id="confirmModalTitle" class="text-sm font-bold text-slateText">請確認操作</h4>
+          <p id="confirmModalDesc" class="text-xs text-slateMuted">此操作將執行變更，確定繼續？</p>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="closeConfirmModal(false)" class="flex-1 py-2 rounded-xl text-xs font-bold text-slateMuted bg-gray-100 hover:bg-gray-200">取消</button>
+          <button id="confirmModalActionBtn" class="flex-1 py-2 rounded-xl text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 shadow-cute">確認執行</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Add / Edit Itinerary Activity -->
+    <div id="itineraryModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl space-y-3 border-2 border-sky-200 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-sky-100 pb-2">
+          <h4 id="itineraryModalHeading" class="text-xs font-bold text-slateText">☁️ 新增景點或交通</h4>
+          <button onclick="closeItineraryModal()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <input type="hidden" id="editActivityId" />
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">項目名稱 / 地點</label>
+          <input type="text" id="actNameInput" placeholder="例如：天保山大摩天輪" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted">分類</label>
+            <select id="actCategorySelect" class="w-full px-2.5 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none">
+              <option value="景點">🎡 景點遊樂</option>
+              <option value="美食">🍱 美食餐飲</option>
+              <option value="交通">🚌 交通搭乘</option>
+              <option value="住宿">🏡 住宿Check-in</option>
+              <option value="購物">🛍️ 購物商場</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted">預計時間</label>
+            <input type="text" id="actTimeInput" placeholder="例如：14:00" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">詳細交通指南（精確至出口、升降機與步數）</label>
+          <textarea id="actTransitInput" rows="3" placeholder="例如：從 1 號出口搭乘升降機，沿平路步行約 5 分鐘..." class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400"></textarea>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">Google Maps 搜尋地點或網址</label>
+          <input type="text" id="actMapQueryInput" placeholder="地點名稱或直接填入 Maps 連結" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">貼心備註 (選填)</label>
+          <input type="text" id="actNotesInput" placeholder="例如：11人需叫2-3部Taxi；推車平路友善" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="flex space-x-2 pt-2">
+          <button onclick="closeItineraryModal()" class="flex-1 py-2 text-xs font-bold text-slateMuted bg-gray-100 rounded-xl">取消</button>
+          <button onclick="saveItineraryActivity()" class="flex-1 py-2 text-xs font-bold text-white bg-sky-500 rounded-xl shadow-cute hover:bg-sky-600">儲存景點</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Add / Edit Expense -->
+    <div id="expenseModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl space-y-3.5 border-2 border-sky-200 max-h-[92vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-sky-100 pb-2">
+          <h4 id="expenseModalHeading" class="text-xs font-bold text-slateText">💰 記錄消費分帳</h4>
+          <button onclick="closeExpenseModal()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <input type="hidden" id="editExpenseId" />
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">消費項目名稱</label>
+          <input type="text" id="expTitleInput" placeholder="例如：Day 3 近江牛燒肉、USJ門票" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted">消費總額</label>
+            <input type="number" id="expAmountInput" step="any" placeholder="例如：12000" class="w-full px-3 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400 font-bold" oninput="renderSplitFields()" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slateMuted">結算幣種</label>
+            <select id="expCurrencySelect" class="w-full px-2.5 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none" onchange="renderSplitFields()">
+              <option value="JPY">🇯🇵 日圓 (JPY ¥)</option>
+              <option value="HKD">🇭🇰 港幣 (HKD $)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">誰負責先付？（代付人）</label>
+          <select id="expPayerSelect" class="w-full px-2.5 py-2 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none">
+            <!-- Dynamically populated member names -->
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">分帳模式</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center justify-center p-2 rounded-xl border border-sky-200 bg-sky-50/50 text-xs cursor-pointer hover:bg-sky-100">
+              <input type="radio" name="splitType" value="equal" checked onchange="toggleSplitMode('equal')" class="mr-1.5 text-sky-500" />
+              <span>人均均分</span>
+            </label>
+            <label class="flex items-center justify-center p-2 rounded-xl border border-sky-200 bg-sky-50/50 text-xs cursor-pointer hover:bg-sky-100">
+              <input type="radio" name="splitType" value="custom" onchange="toggleSplitMode('custom')" class="mr-1.5 text-sky-500" />
+              <span>分開自訂付款</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic Participants / Itemized Share Container -->
+        <div class="space-y-1.5 bg-sky-50/60 p-2.5 rounded-2xl border border-sky-200">
+          <div class="flex justify-between items-center text-[10px] font-bold text-slateMuted">
+            <span>參與分帳成員明細</span>
+            <button type="button" onclick="selectAllMembersInSplit()" class="text-sky-600 underline">全選</button>
+          </div>
+          <div id="splitDetailContainer" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+            <!-- Checkboxes or Custom Inputs -->
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slateMuted">備註 (可留空)</label>
+          <input type="text" id="expNotesInput" placeholder="例如：信用卡刷卡、現金" class="w-full px-3 py-1.5 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none" />
+        </div>
+
+        <div class="flex space-x-2 pt-2">
+          <button onclick="closeExpenseModal()" class="flex-1 py-2 text-xs font-bold text-slateMuted bg-gray-100 rounded-xl">取消</button>
+          <button onclick="saveExpenseItem()" class="flex-1 py-2 text-xs font-bold text-white bg-sky-500 rounded-xl shadow-cute hover:bg-sky-600">確認記帳</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Member Management -->
+    <div id="memberModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-xs w-full shadow-2xl space-y-3.5 border-2 border-sky-200">
+        <div class="flex justify-between items-center border-b border-sky-100 pb-2">
+          <h4 class="text-xs font-bold text-slateText">👥 管理旅伴名單</h4>
+          <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <div class="flex space-x-2">
+          <input type="text" id="newMemberInput" placeholder="輸入成員名字" class="flex-1 px-3 py-1.5 text-xs bg-sky-50/60 border border-sky-200 rounded-xl focus:outline-none focus:border-sky-400" />
+          <button onclick="addMember()" class="bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-soft">新增</button>
+        </div>
+
+        <div id="modalMemberList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+          <!-- Member list -->
+        </div>
+
+        <div class="pt-2">
+          <button onclick="closeMemberModal()" class="w-full py-2 text-xs font-bold text-slateMuted bg-gray-100 rounded-xl">完成</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Text Bill Export -->
+    <div id="exportTextModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl space-y-3 border-2 border-sky-200">
+        <div class="flex justify-between items-center border-b border-sky-100 pb-2">
+          <h4 class="text-xs font-bold text-slateText">📋 WhatsApp / LINE 結算文字</h4>
+          <button onclick="closeExportTextModal()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+        <textarea id="exportTextContent" readonly rows="8" class="w-full p-2.5 text-[11px] font-mono bg-sky-50/60 border border-sky-200 rounded-xl select-all focus:outline-none"></textarea>
+        <button onclick="copyExportText()" class="w-full py-2.5 text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 rounded-xl shadow-cute">
+          📋 複製全部文字到剪貼簿
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal: Receipt Image Preview & Download -->
+    <div id="receiptImageModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl p-5 max-w-sm w-full shadow-2xl space-y-3 border-2 border-sky-200 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-sky-100 pb-2">
+          <h4 class="text-xs font-bold text-slateText">🖼️ 天空藍暖陽收據圖片</h4>
+          <button onclick="closeReceiptImageModal()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+        
+        <div class="flex justify-center bg-sky-50 p-2 rounded-2xl border border-sky-200 overflow-hidden">
+          <img id="receiptPreviewImg" alt="結算收據" class="max-w-full rounded-xl shadow-soft" />
+        </div>
+
+        <a id="receiptDownloadLink" download="Kansai_Sky_Trip_Receipt.png" class="block w-full py-2.5 text-center text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 rounded-xl shadow-cute">
+          💾 下載收據圖片
+        </a>
+      </div>
+    </div>
+
+  </div> <!-- End App Container -->
+
+  <!-- Canvas used to draw Sky Blue receipt image -->
+  <canvas id="receiptCanvas" class="hidden" width="750" height="1100"></canvas>
+
+  <script>
+    /* =========================================================
+       GLOBAL APP STATE & DEFAULT TRIP DATA (Sky & Butter Style)
+       ========================================================= */
+    const STORAGE_KEY = 'kansai_sky_trip_v2';
+    const APP_VERSION = '2.0.0';
+
+    // 9-Day Itinerary Data (10/24 - 11/01)
+    const DEFAULT_ITINERARY = [
+      {
+        day: 1,
+        date: '10/24',
+        weekday: '六',
+        title: '抵達大阪 ➔ 民宿入住 ➔ 周邊地道晚餐',
+        badge: '出發日',
+        note: '抵達關西機場先買飲品，入境 Visit Japan Web 準備好',
+        activities: [
+          {
+            id: 'act_1_1',
+            time: '08:45 - 13:30',
+            name: '香港 ✈️ 大阪關西國際機場 (KIX)',
+            category: '交通',
+            transit: '抵達 KIX 第一航廈，入境提取行李後，跟隨「鐵道 Railway」指示穿過二樓連通天橋前往南海電鐵閘口。',
+            mapQuery: 'Kansai International Airport',
+            notes: '帶好護照，出閘前備妥 IC 卡或車票。'
+          },
+          {
+            id: 'act_1_2',
+            time: '14:30 - 15:15',
+            name: '南海電鐵（機場急行 / Rapi:t 特急）➔ 直達天下茶屋站',
+            category: '交通',
+            transit: '直達「天下茶屋站」，車程約 39–44 分鐘，全程免轉車。到站後請走【西口或北口】，設有無障礙升降機。',
+            mapQuery: 'Tengachaya Station',
+            notes: '推大件行李與嬰兒車全程平路極為輕鬆。'
+          },
+          {
+            id: 'act_1_3',
+            time: '15:30',
+            name: '民宿 Check-in：「栄•吉」',
+            category: '住宿',
+            transit: '地址：大阪市西成區花園南 2-6-20。由天下茶屋站西口出站，沿平緩巷道步行 3–5 分鐘即抵達。',
+            mapQuery: '2-chome-6-20 Hanazonominami, Nishinari Ward, Osaka',
+            notes: '門口密碼鎖自助入住，先放行李安頓休息。'
+          },
+          {
+            id: 'act_1_4',
+            time: '18:00',
+            name: '晚餐：Gusto 天下茶屋店 (家庭餐廳)',
+            category: '美食',
+            transit: '由民宿步行約 3 分鐘，位於天下茶屋站商場複合大樓 2 樓（有升降機）。',
+            mapQuery: 'Gusto Tengachaya',
+            notes: '備有豐富不辣兒童餐、送餐機器人，長幼皆適宜。'
+          }
+        ]
+      },
+      {
+        day: 2,
+        date: '10/25',
+        weekday: '日',
+        title: '天橋立 ＋ 伊根舟屋（14座專車一日遊）',
+        badge: '包車美景',
+        note: '包車點對點門口接送，今日步行僅約 4,500 步',
+        activities: [
+          {
+            id: 'act_2_1',
+            time: '08:30 - 10:30',
+            name: '民宿門口 ➔ 天橋立（14座專車包車直達）',
+            category: '交通',
+            transit: '預約司機直接於民宿門口迎接，點對點直達天橋立，車程約 2 小時，全體車上補眠充電。',
+            mapQuery: 'Amanohashidate View Land',
+            notes: '長輩與小孩無須擠地鐵換車。'
+          },
+          {
+            id: 'act_2_2',
+            time: '10:30 - 13:00',
+            name: '天橋立 View Land 箱型纜車 / 飛龍觀',
+            category: '景點',
+            transit: '搭乘安全箱型封閉纜車（或單人吊椅）登頂，走平坦步道觀景台「倒頭看飛龍在天」。',
+            mapQuery: 'Amanohashidate View Land',
+            notes: '山頂設有平路小火車及摩天輪，可推嬰兒車。'
+          },
+          {
+            id: 'act_2_3',
+            time: '13:30 - 15:30',
+            name: '伊根舟屋 ＆ 伊根灣觀光船',
+            category: '景點',
+            transit: '包車車程約 25–30 分鐘抵達伊根灣碼頭。搭乘平穩觀光船（航程約 25 分鐘）。',
+            mapQuery: 'Ine Bay Sightseeing Boat',
+            notes: '可在船上購買蝦條餵海鷗，超受小朋友歡迎！'
+          },
+          {
+            id: 'act_2_4',
+            time: '16:00 - 18:30',
+            name: '包車回程直達民宿門口 ➔ 周邊晚餐',
+            category: '交通',
+            transit: '專車直送回大阪民宿門口，車程約 2 小時 15 分鐘。',
+            mapQuery: '2-chome-6-20 Hanazonominami, Nishinari Ward, Osaka',
+            notes: '晚上可於天下茶屋車站超市採購新鮮水果與宵夜。'
+          }
+        ]
+      },
+      {
+        day: 3,
+        date: '10/26',
+        weekday: '一',
+        title: '琵琶湖山谷 (Zipline) ➔ 近江牛饗宴',
+        badge: '自然冒險',
+        note: '山頂海拔1100米氣溫比市區低8-10度，帶備厚外套防風',
+        activities: [
+          {
+            id: 'act_3_1',
+            time: '08:15 - 10:00',
+            name: '大阪 ➔ 琵琶湖山谷 (Biwako Valley)',
+            category: '交通',
+            transit: '天下茶屋站搭南海電鐵(4分)到新今宮，轉 JR 大和路線/環狀線至大阪站，同站轉乘【JR 新快速】直達 JR 志賀站(45分)，站外搭江若巴士(10分)直達纜車站。',
+            mapQuery: 'Biwako Valley Cable Car',
+            notes: '搭乘大型高速觀光箱型纜車 5 分鐘升上海拔 1,100 米。'
+          },
+          {
+            id: 'act_3_2',
+            time: '10:30 - 14:00',
+            name: 'Biwako Terrace 湖景咖啡 / Zipline 飛索',
+            category: '景點',
+            transit: '山頂為開闊木棧平台。大人組體驗 Zipline 高空飛索，長者幼兒組於 Terrace Cafe 悠閒享用下午茶與湖景。',
+            mapQuery: 'Terrace Cafe, Biwako Terrace',
+            notes: '秋季山上風大，務必帶備防風外套。'
+          },
+          {
+            id: 'act_3_3',
+            time: '16:30 - 19:30',
+            name: '晚餐：近江牛饗宴（首選方案 B：京都站）',
+            category: '美食',
+            transit: 'JR 志賀站乘 JR 湖西線直達【JR 京都站】（車程 35 分鐘，0次轉車）。推薦享用【京都瓢斗】出汁涮涮鍋或【京之燒肉處 弘】。',
+            mapQuery: 'Kyoto Hyoto Kyoto Station',
+            notes: '飯後從京都站搭乘 JR 新快速 29 分鐘回大阪站轉地鐵回民宿。'
+          }
+        ]
+      },
+      {
+        day: 4,
+        date: '10/27',
+        weekday: '二',
+        title: '宇治抹茶 (平等院) ➔ 傍晚祇園 ➔ 高台寺夜紅葉',
+        badge: '京都秋韻',
+        note: '祇園往高台寺路段分乘 2-3 部 Taxi，避免長幼爬斜坡',
+        activities: [
+          {
+            id: 'act_4_1',
+            time: '09:00 - 10:15',
+            name: '大阪 ➔ 宇治平等院表參道',
+            category: '交通',
+            transit: '天下茶屋搭 Osaka Metro 堺筋線到【北濱站】，地下通道轉乘【京阪電車（特急）】至中書島站，同月台轉京阪宇治線至【京阪宇治站】。平路步行過橋即達表參道。',
+            mapQuery: 'Byodoin Temple',
+            notes: '沿途品嚐中村藤吉本店抹茶雪糕、抹茶甜品。'
+          },
+          {
+            id: 'act_4_2',
+            time: '10:30 - 13:30',
+            name: '國寶平等院鳳凰堂漫步 ＆ 抹茶午餐',
+            category: '景點',
+            transit: '參觀萬元日幣背後的鳳凰堂美景，園區內皆為平緩碎石步道，可無障礙推車。',
+            mapQuery: 'Nakamura Tokichi Honten',
+            notes: '推薦於中村藤吉本店品嚐生茶啫喱與抹茶蕎麥麵。'
+          },
+          {
+            id: 'act_4_3',
+            time: '14:30 - 17:00',
+            name: '宇治 ➔ 祇園花見小路 ＆ 八坂神社',
+            category: '景點',
+            transit: '京阪宇治站搭電車至中書島轉京阪特急直達【祇園四條站】（約 28 分鐘）。漫步花見小路傳統町家街景。',
+            mapQuery: 'Gion-Shijo Station',
+            notes: '古色古香街道非常適合拍照留念。'
+          },
+          {
+            id: 'act_4_4',
+            time: '17:30 - 19:30',
+            name: '高台寺秋季夜間特別拜觀（紅葉燈光秀）',
+            category: '景點',
+            transit: '從祇園四條站外，建議分乘 2–3 部 Taxi 直達高台寺門口（車程 3–5 分鐘，約 800-1000 円，長者幼兒免爬斜坡）。',
+            mapQuery: 'Kodaiji Temple',
+            notes: '臥龍池夜楓倒影震撼美麗！結束後搭 Taxi 回祇園四條站轉京阪特急回大阪。'
+          }
+        ]
+      },
+      {
+        day: 5,
+        date: '10/28',
+        weekday: '三',
+        title: 'USJ 日本環球影城（平日專場歡樂遊）',
+        badge: '樂園暢玩',
+        note: '11 人叫 2-3 部 Uber/GO Taxi 直達正門，免去早高峰逼電車',
+        activities: [
+          {
+            id: 'act_5_1',
+            time: '07:45 - 08:15',
+            name: '民宿 ➔ USJ 正門（大型 Taxi / 專車直達）',
+            category: '交通',
+            transit: '11 人建議使用 Uber / GO App 預約 2–3 部 JPN Taxi 或 Alphard，民宿門口直達影城正門，車程僅 20–25 分鐘。',
+            mapQuery: 'Universal Studios Japan',
+            notes: '徹底避開早高峰擠逼電車，精神充沛入園！'
+          },
+          {
+            id: 'act_5_2',
+            time: '08:30 - 18:00',
+            name: '環球奇境 (Universal Wonderland) ＆ 瑪利歐園區',
+            category: '景點',
+            transit: '奇境專區專為長幼設計（Snoopy、Hello Kitty、芝麻街），無刺激旋轉且設有用餐專區。',
+            mapQuery: 'Universal Wonderland USJ',
+            notes: '記得在官方 App 抽取超任世界整理券（或持快速通關直接進入）。'
+          },
+          {
+            id: 'act_5_3',
+            time: '18:30',
+            name: 'USJ ➔ 大阪民宿（分乘 Taxi 或 JR 櫻島線）',
+            category: '交通',
+            transit: '於 USJ 計程車站直接乘車回民宿（約 20 分鐘）；亦可搭 JR 櫻島線至西九條轉難波回天下茶屋。',
+            mapQuery: '2-chome-6-20 Hanazonominami, Nishinari Ward, Osaka',
+            notes: '回民宿周邊享用居酒屋或外帶熱食。'
+          }
+        ]
+      },
+      {
+        day: 6,
+        date: '10/29',
+        weekday: '四',
+        title: '大阪海遊館 ➔ 天保山摩天輪 ➔ 心齋橋近江牛燒肉',
+        badge: '水族海灣',
+        note: '海遊館有螺旋下坡無障礙步道，適合長輩小孩輕鬆慢逛',
+        activities: [
+          {
+            id: 'act_6_1',
+            time: '09:30 - 10:15',
+            name: '民宿 ➔ 大阪海遊館',
+            category: '交通',
+            transit: '花園町站搭 Osaka Metro 四橋線至本町站(8分)，同站轉【中央線】直達【大阪港站】(11分)。由【1 號出口搭乘升降機】，沿平路步行約 5 分鐘抵達。',
+            mapQuery: 'Osaka Aquarium Kaiyukan',
+            notes: '無障礙通道完善，推車非常輕鬆。'
+          },
+          {
+            id: 'act_6_2',
+            time: '10:30 - 14:00',
+            name: '世界級巨型水槽「海遊館」＆ 天保山 Marketplace 午餐',
+            category: '景點',
+            transit: '館內為平緩螺旋下坡步道，觀賞巨大鯨鯊、海獺與企鵝餵食秀。午餐於商場享用日式定食。',
+            mapQuery: 'Tempozan Marketplace',
+            notes: '室內空調環境舒適，不受天氣影響。'
+          },
+          {
+            id: 'act_6_3',
+            time: '14:30 - 16:30',
+            name: '天保山大摩天輪 ＆ 聖瑪麗亞號海灣觀光船',
+            category: '景點',
+            transit: '位於海遊館正身旁。可搭乘全透明冷氣摩天輪俯瞰大阪灣，或乘坐觀光船吹海風（航程 45 分鐘）。',
+            mapQuery: 'Tempozan Giant Ferris Wheel',
+            notes: '坐在船內沙發席非常舒適愜意。'
+          },
+          {
+            id: 'act_6_4',
+            time: '17:30 - 20:00',
+            name: '晚餐：心齋橋/難波 頂級近江牛燒肉（萬野屋/松屋）',
+            category: '美食',
+            transit: '大阪港站搭中央線至本町轉御堂筋線至【心齋橋站/難波站】（車程約 18 分鐘）。享用油花細膩的近江牛黑毛和牛。',
+            mapQuery: 'Yakiniku Mannoya Shinsaibashi',
+            notes: '飯後搭地鐵 5 分鐘即直達民宿休息。'
+          }
+        ]
+      },
+      {
+        day: 7,
+        date: '10/30',
+        weekday: '五',
+        title: '神戶港灣漫遊 ➔ 麵包超人兒童館 ➔ 神戶牛排',
+        badge: '港灣神戶',
+        note: '高速神戶站至海濱長廊為平坦地下街，不受陰雨影響',
+        activities: [
+          {
+            id: 'act_7_1',
+            time: '09:30 - 10:45',
+            name: '民宿 ➔ 神戶港 Harborland',
+            category: '交通',
+            transit: '民宿搭地鐵至難波站(4分)，轉【阪神電車（快速急行）】直達【高速神戶站】（車程 45 分鐘）。出站經 Duo Kobe 平坦地下街與升降機，步行 8–10 分鐘直通海港城。',
+            mapQuery: 'Kobe Anpanman Children\'s Museum & Mall',
+            notes: '若乘搭僅到神戶三宮的列車，同月台轉乘神戶高速線即可。'
+          },
+          {
+            id: 'act_7_2',
+            time: '11:00 - 14:30',
+            name: '神戶麵包超人兒童博物館 ＆ 購物廣場',
+            category: '景點',
+            transit: '館內充滿互動遊樂設施與麵包超人見面會，1樓商場區可免費購買超萌角色造型現烤麵包。',
+            mapQuery: 'Kobe Harborland umie MOSAIC',
+            notes: '小朋友放電首選，周邊為無障礙海濱木棧道。'
+          },
+          {
+            id: 'act_7_3',
+            time: '15:00 - 18:30',
+            name: 'umie MOSAIC 購物商場 ＆ 神戶牛排晚宴',
+            category: '美食',
+            transit: '眺望神戶紅色地標塔與海港郵輪，在海景餐廳享用馳名神戶牛鐵板燒或日式涮涮鍋。',
+            mapQuery: 'Kobe Harborland umie MOSAIC',
+            notes: '沿原路經高速神戶站搭阪神電車直返難波。'
+          }
+        ]
+      },
+      {
+        day: 8,
+        date: '10/31',
+        weekday: '六',
+        title: '天王寺動物園 ➔ 阿倍野展望台 ➔ 臨空城 Outlets',
+        badge: '血拼眺望',
+        note: '天王寺站直接搭 JR 關空快速直達臨空城，不用折返民宿',
+        activities: [
+          {
+            id: 'act_8_1',
+            time: '09:30 - 12:00',
+            name: '天王寺動物園（百週年生態園區）',
+            category: '景點',
+            transit: '民宿旁搭地鐵御堂筋線至【天王寺站】（僅 2 分鐘，【5 號出口】），出站步行 3 分鐘即達新世界門口。',
+            mapQuery: 'Tennoji Zoo',
+            notes: '園區平緩，近距離觀賞北極熊、長頸鹿及獅子。'
+          },
+          {
+            id: 'act_8_2',
+            time: '12:15 - 14:00',
+            name: '阿倍野 HARUKAS 300 展望台 ＆ 近鐵百貨午餐',
+            category: '景點',
+            transit: '經地下人行通道步行 5 分鐘直達 HARUKAS 大樓。搭乘星空電梯直達 60 樓 360 度觀景台。',
+            mapQuery: 'Abeno Harukas 300',
+            notes: '全玻璃平坦迴廊，景觀壯闊震撼。'
+          },
+          {
+            id: 'act_8_3',
+            time: '14:30 - 19:30',
+            name: '臨空城 Rinku Premium Outlets 狂歡購物',
+            category: '購物',
+            transit: '【JR 天王寺站】直接搭乘【JR 關空快速】直達【臨空城站（Rinku Town）】（車程約 38 分鐘，無需回民宿）。出站步行 6 分鐘經天橋即達 Outlets。',
+            mapQuery: 'Rinku Premium Outlets',
+            notes: '過百家國際名牌與運動童裝店，晚上搭南海電鐵回天下茶屋站整理行李。'
+          }
+        ]
+      },
+      {
+        day: 9,
+        date: '11/01',
+        weekday: '日',
+        title: '民宿 Check-out ➔ 天下茶屋乘南海電鐵 ➔ 關西機場返港',
+        badge: '平安歸程',
+        note: '天下茶屋為始發大站，上車多數有座位，推車非常方便',
+        activities: [
+          {
+            id: 'act_9_1',
+            time: '10:00',
+            name: '民宿 Check-out 整理行李',
+            category: '住宿',
+            transit: '檢查護照、隨身貴重物品，鎖好民宿大門。平路步行 3–5 分鐘（或叫 1 部 Taxi 送行李）至天下茶屋站。',
+            mapQuery: '2-chome-6-20 Hanazonominami, Nishinari Ward, Osaka',
+            notes: '天下茶屋站內有售賣關西名產伴手禮。'
+          },
+          {
+            id: 'act_9_2',
+            time: '10:30 - 11:15',
+            name: '天下茶屋站 ➔ 關西國際機場（KIX）',
+            category: '交通',
+            transit: '乘搭【南海電鐵特急 Rapi:t 或 機場急行】，直達關西機場第一航廈（車程約 39–44 分鐘，直達無須轉車）。',
+            mapQuery: 'Tengachaya Station',
+            notes: '天下茶屋為起步大站，上車多數有座位，推車非常方便。'
+          },
+          {
+            id: 'act_9_3',
+            time: '11:30 - 14:00',
+            name: '關西機場出境審查 ＆ 免稅店採購 ✈️ 香港',
+            category: '交通',
+            transit: '抵達機場辦理登機行李托運，採購 Royce 生朱古力、白色戀人等手信，平安返港！',
+            mapQuery: 'Kansai International Airport',
+            notes: '為 9 日 8 夜溫馨關西親子長幼之旅劃上完美句號！'
+          }
+        ]
+      }
+    ];
+
+    const DEFAULT_MEMBERS = ['小明', '阿華', '美美'];
+
+    let appState = {
+      version: APP_VERSION,
+      activeTab: 'itinerary',
+      activeDay: 1,
+      baseRate: 0.0520,
+      members: [...DEFAULT_MEMBERS],
+      expenses: [],
+      settlementHistory: [],
+      itinerary: JSON.parse(JSON.stringify(DEFAULT_ITINERARY))
+    };
+
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.version) {
+            appState = { ...appState, ...parsed };
+            if (!Array.isArray(appState.members)) appState.members = [...DEFAULT_MEMBERS];
+            if (!Array.isArray(appState.expenses)) appState.expenses = [];
+            if (!Array.isArray(appState.settlementHistory)) appState.settlementHistory = [];
+            if (!Array.isArray(appState.itinerary)) appState.itinerary = JSON.parse(JSON.stringify(DEFAULT_ITINERARY));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to parse localStorage data", err);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        updateSaveIndicator(true);
+      } catch (err) {
+        console.error("Storage save failed", err);
+        updateSaveIndicator(false);
+      }
+    }
+
+    function updateSaveIndicator(success) {
+      const el = document.getElementById('saveIndicator');
+      const text = document.getElementById('saveStatusText');
+      if (!el || !text) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      if (success) {
+        el.className = "flex items-center space-x-1 px-2.5 py-1 rounded-full bg-butter-100 text-[11px] font-bold text-sky-800 border border-butter-300 transition-all duration-300";
+        text.innerHTML = `💾 已自動儲存 ${timeStr}`;
+      } else {
+        el.className = "flex items-center space-x-1 px-2.5 py-1 rounded-full bg-red-100 text-[11px] font-bold text-red-600 border border-red-200 transition-all duration-300";
+        text.innerHTML = `⚠️ 儲存失敗`;
+      }
+    }
+
+    function showToast(message, icon = '☁️') {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+      if (!toast) return;
+
+      msgEl.innerText = message;
+      iconEl.innerText = icon;
+
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0');
+      }, 2200);
+    }
+
+    function switchTab(tabId) {
+      appState.activeTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      const activeEl = document.getElementById(`tab-${tabId}`);
+      if (activeEl) activeEl.classList.add('active');
+
+      const tabs = ['itinerary', 'billing', 'converter', 'settings'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (!btn) return;
+        if (t === tabId) {
+          btn.className = "nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-sky-600 font-bold transition-all scale-105";
+        } else {
+          btn.className = "nav-btn flex flex-col items-center py-1 px-3 rounded-2xl text-slateMuted font-medium hover:text-sky-500 transition-all";
+        }
+      });
+
+      if (tabId === 'converter') {
+        updateConverterUI();
+      } else if (tabId === 'billing') {
+        renderBillingTab();
+      }
+
+      saveState();
+    }
+
+    function renderDayPills() {
+      const container = document.getElementById('daySelectorList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      appState.itinerary.forEach((dayPlan) => {
+        const isCurrent = dayPlan.day === appState.activeDay;
+        const btn = document.createElement('button');
+        btn.onclick = () => selectDay(dayPlan.day);
+        btn.className = `flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex flex-col items-center min-w-[62px] ${
+          isCurrent 
+            ? 'bg-gradient-to-b from-sky-400 to-sky-500 text-white shadow-cute scale-102 border border-sky-300' 
+            : 'bg-sky-50 text-slateMuted hover:bg-sky-100 border border-sky-100'
+        }`;
+        btn.innerHTML = `
+          <span class="text-[10px] opacity-90">Day ${dayPlan.day}</span>
+          <span class="text-xs">${dayPlan.date} (${dayPlan.weekday})</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectDay(dayNum) {
+      appState.activeDay = dayNum;
+      renderDayPills();
+      renderCurrentDayDetails();
+      saveState();
+    }
+
+    function renderCurrentDayDetails() {
+      const dayData = appState.itinerary.find(d => d.day === appState.activeDay) || appState.itinerary[0];
+      if (!dayData) return;
+
+      document.getElementById('bannerDayTag').innerText = `DAY ${dayData.day} • ${dayData.badge || '輕旅行'}`;
+      document.getElementById('bannerDateTitle').innerText = `${dayData.date}（${dayData.weekday}）`;
+      document.getElementById('bannerDayDesc').innerText = dayData.title;
+      document.getElementById('daySummaryBadge').innerText = `Day ${dayData.day} (${dayData.date})`;
+
+      // Day Note Textarea
+      const noteInput = document.getElementById('dayNoteTextarea');
+      if (noteInput) {
+        noteInput.value = dayData.note || '';
+      }
+
+      const container = document.getElementById('activitiesContainer');
+      container.innerHTML = '';
+
+      if (!dayData.activities || dayData.activities.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white p-6 rounded-2xl text-center border border-sky-100 space-y-2">
+            <span class="text-3xl">☕</span>
+            <p class="text-xs text-slateMuted">今天暫無行程，享受晴朗的一天！</p>
+            <button onclick="openAddItineraryModal()" class="text-xs text-sky-600 font-bold underline">＋ 新增第一個行程</button>
+          </div>
+        `;
+        return;
+      }
+
+      dayData.activities.forEach((act) => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-3.5 rounded-2xl shadow-soft border border-sky-100 space-y-2 hover:border-sky-300 transition-all";
+
+        const mapUrl = act.mapQuery.startsWith('http') 
+          ? act.mapQuery 
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.mapQuery || act.name)}`;
+
+        const catMap = {
+          '景點': { icon: '🎡', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          '美食': { icon: '🍱', color: 'bg-butter-100 text-sky-800 border-butter-300' },
+          '交通': { icon: '🚌', color: 'bg-sky-50 text-sky-700 border-sky-200' },
+          '住宿': { icon: '🏡', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+          '購物': { icon: '🛍️', color: 'bg-amber-50 text-amber-700 border-amber-200' }
+        };
+        const catInfo = catMap[act.category] || { icon: '📍', color: 'bg-sky-50 text-sky-700 border-sky-200' };
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div class="space-y-0.5">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-[10px] px-2 py-0.5 rounded-md font-bold border ${catInfo.color}">
+                  ${catInfo.icon} ${act.category || '活動'}
+                </span>
+                ${act.time ? `<span class="text-[11px] font-bold text-sky-600">⏰ ${act.time}</span>` : ''}
+              </div>
+              <h4 class="text-xs font-bold text-slateText pt-0.5">${act.name}</h4>
+            </div>
+
+            <div class="flex items-center space-x-1">
+              <button onclick="openEditItineraryModal('${act.id}')" class="text-gray-400 hover:text-sky-600 p-1 text-xs" title="編輯">✏️</button>
+              <button onclick="deleteItineraryActivity('${act.id}')" class="text-gray-400 hover:text-red-500 p-1 text-xs" title="刪除">🗑️</button>
+            </div>
+          </div>
+
+          ${act.transit ? `
+            <div class="bg-sky-50/70 p-2.5 rounded-xl border border-sky-100 text-[11px] text-slateText leading-relaxed">
+              <div class="font-bold text-sky-700 flex items-center gap-1 mb-0.5">
+                <span>🚇 點搭車與出口指南：</span>
+              </div>
+              <p>${act.transit}</p>
+            </div>
+          ` : ''}
+
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[10px] text-slateMuted truncate max-w-[210px]">
+              ${act.notes ? `💡 ${act.notes}` : ''}
+            </span>
+            <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" 
+              class="inline-flex items-center space-x-1 px-2.5 py-1 bg-gradient-to-r from-sky-400 to-sky-500 text-white text-[11px] font-bold rounded-xl shadow-cute hover:opacity-90 active:scale-95 transition-all">
+              <span>🗺️ Google Maps</span>
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function toggleDayNoteBox() {
+      const box = document.getElementById('dayNoteContainer');
+      box.classList.toggle('hidden');
+    }
+
+    function saveCurrentDayNote() {
+      const noteInput = document.getElementById('dayNoteTextarea');
+      const dayData = appState.itinerary.find(d => d.day === appState.activeDay);
+      if (dayData && noteInput) {
+        dayData.note = noteInput.value.trim();
+        saveState();
+        showToast('當日備忘已儲存！', '📝');
+      }
+    }
+
+    function openAddItineraryModal() {
+      document.getElementById('editActivityId').value = '';
+      document.getElementById('itineraryModalHeading').innerText = `☁️ 新增行程活動 (Day ${appState.activeDay})`;
+      document.getElementById('actNameInput').value = '';
+      document.getElementById('actCategorySelect').value = '景點';
+      document.getElementById('actTimeInput').value = '';
+      document.getElementById('actTransitInput').value = '';
+      document.getElementById('actMapQueryInput').value = '';
+      document.getElementById('actNotesInput').value = '';
+      document.getElementById('itineraryModal').classList.remove('hidden');
+    }
+
+    function openEditItineraryModal(actId) {
+      const dayData = appState.itinerary.find(d => d.day === appState.activeDay);
+      if (!dayData) return;
+      const act = dayData.activities.find(a => a.id === actId);
+      if (!act) return;
+
+      document.getElementById('editActivityId').value = act.id;
+      document.getElementById('itineraryModalHeading').innerText = `✏️ 編輯行程活動`;
+      document.getElementById('actNameInput').value = act.name || '';
+      document.getElementById('actCategorySelect').value = act.category || '景點';
+      document.getElementById('actTimeInput').value = act.time || '';
+      document.getElementById('actTransitInput').value = act.transit || '';
+      document.getElementById('actMapQueryInput').value = act.mapQuery || '';
+      document.getElementById('actNotesInput').value = act.notes || '';
+      document.getElementById('itineraryModal').classList.remove('hidden');
+    }
+
+    function closeItineraryModal() {
+      document.getElementById('itineraryModal').classList.add('hidden');
+    }
+
+    function saveItineraryActivity() {
+      const actId = document.getElementById('editActivityId').value;
+      const name = document.getElementById('actNameInput').value.trim();
+      const category = document.getElementById('actCategorySelect').value;
+      const time = document.getElementById('actTimeInput').value.trim();
+      const transit = document.getElementById('actTransitInput').value.trim();
+      const mapQuery = document.getElementById('actMapQueryInput').value.trim() || name;
+      const notes = document.getElementById('actNotesInput').value.trim();
+
+      if (!name) {
+        showToast('請輸入活動或景點名稱！', '⚠️');
+        return;
+      }
+
+      const dayData = appState.itinerary.find(d => d.day === appState.activeDay);
+      if (!dayData) return;
+
+      if (actId) {
+        const idx = dayData.activities.findIndex(a => a.id === actId);
+        if (idx !== -1) {
+          dayData.activities[idx] = { ...dayData.activities[idx], name, category, time, transit, mapQuery, notes };
+          showToast('行程已成功更新！', '✨');
+        }
+      } else {
+        const newAct = {
+          id: 'act_' + Date.now(),
+          name, category, time, transit, mapQuery, notes
+        };
+        dayData.activities.push(newAct);
+        showToast('新行程已儲存！', '☁️');
+      }
+
+      closeItineraryModal();
+      renderCurrentDayDetails();
+      saveState();
+    }
+
+    function deleteItineraryActivity(actId) {
+      showCustomConfirm('刪除行程', '確定要刪除這筆景點項目嗎？', () => {
+        const dayData = appState.itinerary.find(d => d.day === appState.activeDay);
+        if (!dayData) return;
+        dayData.activities = dayData.activities.filter(a => a.id !== actId);
+        renderCurrentDayDetails();
+        saveState();
+        showToast('項目已刪除', '🗑️');
+      });
+    }
+
+    function renderBillingTab() {
+      const countEl = document.getElementById('memberCount');
+      const pillsEl = document.getElementById('membersPills');
+      countEl.innerText = appState.members.length;
+      pillsEl.innerHTML = '';
+
+      appState.members.forEach(m => {
+        const span = document.createElement('span');
+        span.className = "bg-butter-100 text-sky-800 px-2 py-0.5 rounded-full text-[11px] font-bold border border-butter-300";
+        span.innerText = `👤 ${m}`;
+        pillsEl.appendChild(span);
+      });
+
+      renderExpensesList();
+      renderDebtSettlementPlan();
+      renderSettlementHistoryList();
+    }
+
+    function renderExpensesList() {
+      const container = document.getElementById('expensesContainer');
+      const totalCount = document.getElementById('expenseTotalCount');
+      totalCount.innerText = appState.expenses.length;
+      container.innerHTML = '';
+
+      if (appState.expenses.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white p-6 rounded-2xl text-center border border-sky-100 text-slateMuted space-y-1">
+            <span class="text-2xl">🍰</span>
+            <p class="text-xs">尚無任何消費記錄，點擊上方按鈕開始記帳！</p>
+          </div>
+        `;
+        return;
+      }
+
+      appState.expenses.forEach(exp => {
+        const card = document.createElement('div');
+        const isSettled = !!exp.settled;
+
+        let jpyVal = 0;
+        let hkdVal = 0;
+        if (exp.currency === 'JPY') {
+          jpyVal = exp.amount;
+          hkdVal = exp.amount * appState.baseRate;
+        } else {
+          hkdVal = exp.amount;
+          jpyVal = appState.baseRate > 0 ? (exp.amount / appState.baseRate) : 0;
+        }
+
+        card.className = `bg-white p-3 rounded-2xl border transition-all shadow-soft space-y-1.5 ${
+          isSettled ? 'border-gray-200 bg-gray-50/70' : 'border-sky-100 hover:border-sky-300'
+        }`;
+
+        let participantsStr = '';
+        if (exp.splitType === 'equal') {
+          participantsStr = `均分 (${(exp.involvedMembers || []).join('、')})`;
+        } else {
+          participantsStr = `分開付 (${Object.keys(exp.customShares || {}).join('、')})`;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="space-y-0.5 ${isSettled ? 'settled-item' : ''}">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-xs font-bold text-slateText">${exp.title}</span>
+                <span class="text-[10px] text-slateMuted">（由 <strong>${exp.payer}</strong> 代付）</span>
+              </div>
+              <div class="text-[11px] text-slateMuted">
+                <span>分帳：${participantsStr}</span>
+                ${exp.notes ? ` • <span class="italic text-[10px]">${exp.notes}</span>` : ''}
+              </div>
+            </div>
+
+            <div class="text-right ${isSettled ? 'settled-item' : ''}">
+              <div class="text-xs font-bold text-sky-600">
+                ${exp.currency === 'JPY' ? `¥${Math.round(jpyVal).toLocaleString()}` : `HK$${hkdVal.toFixed(1)}`}
+              </div>
+              <div class="text-[10px] text-slateMuted">
+                ${exp.currency === 'JPY' ? `≈ HK$${hkdVal.toFixed(1)}` : `≈ ¥${Math.round(jpyVal).toLocaleString()}`}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1.5 border-t border-sky-100/70 text-[11px]">
+            <button onclick="toggleExpenseSettled('${exp.id}')" class="px-2.5 py-0.5 rounded-lg font-bold transition-all ${
+              isSettled 
+                ? 'bg-gray-200 text-gray-600 hover:bg-gray-300' 
+                : 'bg-butter-100 text-sky-800 hover:bg-butter-200 border border-butter-300'
+            }">
+              ${isSettled ? '✓ 已結清（劃線排除中）' : '標記為已結清'}
+            </button>
+
+            <div class="flex items-center space-x-2 text-xs">
+              <button onclick="openEditExpenseModal('${exp.id}')" class="text-gray-400 hover:text-sky-600">✏️</button>
+              <button onclick="deleteExpenseItem('${exp.id}')" class="text-gray-400 hover:text-red-500">🗑️</button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function calculateDebtSettlement() {
+      const balances = {};
+      appState.members.forEach(m => balances[m] = 0);
+
+      const activeExpenses = appState.expenses.filter(e => !e.settled);
+
+      activeExpenses.forEach(exp => {
+        const totalJPY = exp.currency === 'JPY' ? exp.amount : (exp.amount / appState.baseRate);
+        const payer = exp.payer;
+
+        if (balances[payer] !== undefined) {
+          balances[payer] += totalJPY;
+        }
+
+        if (exp.splitType === 'equal') {
+          const involved = exp.involvedMembers && exp.involvedMembers.length > 0 ? exp.involvedMembers : appState.members;
+          const share = totalJPY / involved.length;
+          involved.forEach(m => {
+            if (balances[m] !== undefined) {
+              balances[m] -= share;
+            }
+          });
+        } else {
+          const shares = exp.customShares || {};
+          Object.keys(shares).forEach(m => {
+            const rawShare = Number(shares[m]) || 0;
+            const shareInJPY = exp.currency === 'JPY' ? rawShare : (rawShare / appState.baseRate);
+            if (balances[m] !== undefined) {
+              balances[m] -= shareInJPY;
+            }
+          });
+        }
+      });
+
+      let debtors = [];
+      let creditors = [];
+
+      Object.keys(balances).forEach(m => {
+        const net = balances[m];
+        if (net < -0.5) {
+          debtors.push({ name: m, amount: -net });
+        } else if (net > 0.5) {
+          creditors.push({ name: m, amount: net });
+        }
+      });
+
+      debtors.sort((a, b) => b.amount - a.amount);
+      creditors.sort((a, b) => b.amount - a.amount);
+
+      const transactions = [];
+      let d = 0;
+      let c = 0;
+
+      while (d < debtors.length && c < creditors.length) {
+        const debtor = debtors[d];
+        const creditor = creditors[c];
+        const settleAmountJPY = Math.min(debtor.amount, creditor.amount);
+
+        if (settleAmountJPY > 0.5) {
+          const settleAmountHKD = settleAmountJPY * appState.baseRate;
+          transactions.push({
+            from: debtor.name,
+            to: creditor.name,
+            amountJPY: Math.round(settleAmountJPY),
+            amountHKD: parseFloat(settleAmountHKD.toFixed(1))
+          });
+        }
+
+        debtor.amount -= settleAmountJPY;
+        creditor.amount -= settleAmountJPY;
+
+        if (debtor.amount < 0.5) d++;
+        if (creditor.amount < 0.5) c++;
+      }
+
+      return { transactions, balances };
+    }
+
+    function renderDebtSettlementPlan() {
+      const container = document.getElementById('debtPlanList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const { transactions } = calculateDebtSettlement();
+
+      if (transactions.length === 0) {
+        container.innerHTML = `
+          <div class="p-3 bg-sky-50 rounded-xl text-center text-xs text-sky-700 font-bold border border-sky-200">
+            🎉 目前無任何欠款或帳目已全部結清！
+          </div>
+        `;
+        return;
+      }
+
+      transactions.forEach(t => {
+        const item = document.createElement('div');
+        item.className = "p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs flex items-center justify-between";
+        item.innerHTML = `
+          <div class="flex items-center space-x-1.5 font-bold text-slateText">
+            <span class="text-butter-500">⭐</span>
+            <span><strong>${t.from}</strong> 應付給 <strong>${t.to}</strong></span>
+          </div>
+          <div class="text-right">
+            <div class="font-bold text-sky-600">¥${t.amountJPY.toLocaleString()}</div>
+            <div class="text-[10px] text-slateMuted">(約 HK$ ${t.amountHKD})</div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function toggleExpenseSettled(expId) {
+      const exp = appState.expenses.find(e => e.id === expId);
+      if (!exp) return;
+      exp.settled = !exp.settled;
+      renderBillingTab();
+      saveState();
+      showToast(exp.settled ? '已標記為結清' : '已恢復為待結清', '✨');
+    }
+
+    function settleAllExpenses() {
+      const unsettled = appState.expenses.filter(e => !e.settled);
+      if (unsettled.length === 0) {
+        showToast('目前沒有未結清的帳目！', 'ℹ️');
+        return;
+      }
+
+      showCustomConfirm('一鍵統一結清', `確定要將全部 ${unsettled.length} 筆未結清款項標註為已結清，並建立結算存檔嗎？`, () => {
+        const { transactions } = calculateDebtSettlement();
+        const now = new Date();
+        const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        appState.settlementHistory.unshift({
+          id: 'set_' + Date.now(),
+          date: dateStr,
+          transactions: transactions,
+          itemsCount: unsettled.length
+        });
+
+        appState.expenses.forEach(e => e.settled = true);
+
+        renderBillingTab();
+        saveState();
+        showToast('已全部統一結清並存檔！', '🎉');
+      });
+    }
+
+    function renderSettlementHistoryList() {
+      const container = document.getElementById('settlementHistoryList');
+      const countEl = document.getElementById('settlementHistoryCount');
+      if (!container) return;
+
+      countEl.innerText = `${appState.settlementHistory.length} 筆記錄`;
+      container.innerHTML = '';
+
+      if (appState.settlementHistory.length === 0) {
+        container.innerHTML = `<p class="text-center py-2 text-gray-400">暫無結算歷史</p>`;
+        return;
+      }
+
+      appState.settlementHistory.forEach(hist => {
+        const div = document.createElement('div');
+        div.className = "p-2 bg-sky-50/50 rounded-lg border border-sky-100";
+        let subDetails = (hist.transactions || []).map(t => `${t.from}➔${t.to}: ¥${t.amountJPY}`).join(' | ');
+        if (!subDetails) subDetails = '全數已付清無欠款';
+
+        div.innerHTML = `
+          <div class="flex justify-between items-center text-[10px] font-bold text-sky-700">
+            <span>📅 結清時間：${hist.date}</span>
+            <span>結清 ${hist.itemsCount || 0} 筆帳目</span>
+          </div>
+          <div class="text-[10px] text-slateMuted truncate mt-0.5">${subDetails}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function openAddExpenseModal() {
+      document.getElementById('editExpenseId').value = '';
+      document.getElementById('expenseModalHeading').innerText = '💰 記錄新消費';
+      document.getElementById('expTitleInput').value = '';
+      document.getElementById('expAmountInput').value = '';
+      document.getElementById('expCurrencySelect').value = 'JPY';
+      document.getElementById('expNotesInput').value = '';
+      
+      populatePayerDropdown();
+      
+      document.querySelector('input[name="splitType"][value="equal"]').checked = true;
+      toggleSplitMode('equal');
+
+      document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    function openEditExpenseModal(expId) {
+      const exp = appState.expenses.find(e => e.id === expId);
+      if (!exp) return;
+
+      document.getElementById('editExpenseId').value = exp.id;
+      document.getElementById('expenseModalHeading').innerText = '✏️ 編輯消費記錄';
+      document.getElementById('expTitleInput').value = exp.title;
+      document.getElementById('expAmountInput').value = exp.amount;
+      document.getElementById('expCurrencySelect').value = exp.currency;
+      document.getElementById('expNotesInput').value = exp.notes || '';
+
+      populatePayerDropdown(exp.payer);
+
+      if (exp.splitType === 'custom') {
+        document.querySelector('input[name="splitType"][value="custom"]').checked = true;
+        toggleSplitMode('custom', exp.customShares);
+      } else {
+        document.querySelector('input[name="splitType"][value="equal"]').checked = true;
+        toggleSplitMode('equal', exp.involvedMembers);
+      }
+
+      document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    function closeExpenseModal() {
+      document.getElementById('expenseModal').classList.add('hidden');
+    }
+
+    function populatePayerDropdown(selectedPayer = '') {
+      const sel = document.getElementById('expPayerSelect');
+      sel.innerHTML = '';
+      appState.members.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.innerText = m;
+        if (m === selectedPayer) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    let currentSplitMode = 'equal';
+    function toggleSplitMode(mode, existingData = null) {
+      currentSplitMode = mode;
+      renderSplitFields(existingData);
+    }
+
+    function renderSplitFields(existingData = null) {
+      const container = document.getElementById('splitDetailContainer');
+      container.innerHTML = '';
+      const totalAmount = parseFloat(document.getElementById('expAmountInput').value) || 0;
+      const currency = document.getElementById('expCurrencySelect').value;
+
+      if (currentSplitMode === 'equal') {
+        appState.members.forEach(m => {
+          const label = document.createElement('label');
+          label.className = "flex items-center justify-between p-1.5 bg-white rounded-lg border border-sky-100 text-xs";
+          const isChecked = existingData ? existingData.includes(m) : true;
+          label.innerHTML = `
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" name="splitMemberCheck" value="${m}" ${isChecked ? 'checked' : ''} onchange="updateEqualShareDisplay()" class="text-sky-500 rounded" />
+              <span>${m}</span>
+            </div>
+            <span class="text-[10px] text-slateMuted share-val-label">-</span>
+          `;
+          container.appendChild(label);
+        });
+        updateEqualShareDisplay();
+      } else {
+        appState.members.forEach(m => {
+          const div = document.createElement('div');
+          div.className = "flex items-center justify-between p-1.5 bg-white rounded-lg border border-sky-100 text-xs gap-2";
+          const defaultVal = existingData && existingData[m] !== undefined ? existingData[m] : '';
+          div.innerHTML = `
+            <span class="font-bold min-w-[50px]">${m}</span>
+            <div class="flex items-center space-x-1 flex-1">
+              <span class="text-sky-600 font-bold">${currency === 'JPY' ? '¥' : '$'}</span>
+              <input type="number" step="any" placeholder="0" value="${defaultVal}" data-member="${m}" class="custom-member-share w-full px-2 py-1 text-xs border border-sky-200 rounded focus:outline-none" />
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+    }
+
+    function selectAllMembersInSplit() {
+      if (currentSplitMode === 'equal') {
+        document.querySelectorAll('input[name="splitMemberCheck"]').forEach(cb => cb.checked = true);
+        updateEqualShareDisplay();
+      }
+    }
+
+    function updateEqualShareDisplay() {
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="splitMemberCheck"]:checked'));
+      const totalAmount = parseFloat(document.getElementById('expAmountInput').value) || 0;
+      const currency = document.getElementById('expCurrencySelect').value;
+      const count = checkedBoxes.length;
+
+      const perPerson = count > 0 ? (totalAmount / count) : 0;
+      const formatted = currency === 'JPY' ? `¥${Math.round(perPerson)}` : `$${perPerson.toFixed(1)}`;
+
+      document.querySelectorAll('#splitDetailContainer label').forEach(label => {
+        const cb = label.querySelector('input[type="checkbox"]');
+        const span = label.querySelector('.share-val-label');
+        if (cb && cb.checked) {
+          span.innerText = formatted;
+        } else {
+          span.innerText = '不參與';
+        }
+      });
+    }
+
+    function saveExpenseItem() {
+      const expId = document.getElementById('editExpenseId').value;
+      const title = document.getElementById('expTitleInput').value.trim();
+      const amount = parseFloat(document.getElementById('expAmountInput').value);
+      const currency = document.getElementById('expCurrencySelect').value;
+      const payer = document.getElementById('expPayerSelect').value;
+      const notes = document.getElementById('expNotesInput').value.trim();
+
+      if (!title || isNaN(amount) || amount <= 0) {
+        showToast('請填寫完整項目名稱與有效金額！', '⚠️');
+        return;
+      }
+
+      let involvedMembers = [];
+      let customShares = {};
+
+      if (currentSplitMode === 'equal') {
+        const checked = Array.from(document.querySelectorAll('input[name="splitMemberCheck"]:checked'));
+        if (checked.length === 0) {
+          showToast('至少需選取一位參與均分的成員！', '⚠️️');
+          return;
+        }
+        involvedMembers = checked.map(c => c.value);
+      } else {
+        let sum = 0;
+        document.querySelectorAll('.custom-member-share').forEach(input => {
+          const val = parseFloat(input.value) || 0;
+          const member = input.getAttribute('data-member');
+          customShares[member] = val;
+          sum += val;
+        });
+
+        if (Math.abs(sum - amount) > 1) {
+          showToast(`分開填寫總和 (${sum}) 與總金額 (${amount}) 不符，請核對！`, '⚠️');
+          return;
+        }
+      }
+
+      if (expId) {
+        const idx = appState.expenses.findIndex(e => e.id === expId);
+        if (idx !== -1) {
+          appState.expenses[idx] = {
+            ...appState.expenses[idx],
+            title, amount, currency, payer, splitType: currentSplitMode, involvedMembers, customShares, notes
+          };
+          showToast('消費記錄已更新！', '✨');
+        }
+      } else {
+        const newExp = {
+          id: 'exp_' + Date.now(),
+          title, amount, currency, payer,
+          splitType: currentSplitMode,
+          involvedMembers,
+          customShares,
+          notes,
+          settled: false,
+          date: new Date().toLocaleDateString()
+        };
+        appState.expenses.unshift(newExp);
+        showToast('記帳成功！', '☁️');
+      }
+
+      closeExpenseModal();
+      renderBillingTab();
+      saveState();
+    }
+
+    function deleteExpenseItem(expId) {
+      showCustomConfirm('刪除記帳', '確定要刪除這筆消費記錄嗎？', () => {
+        appState.expenses = appState.expenses.filter(e => e.id !== expId);
+        renderBillingTab();
+        saveState();
+        showToast('記帳記錄已刪除', '🗑️');
+      });
+    }
+
+    function openMemberModal() {
+      renderMemberListInModal();
+      document.getElementById('memberModal').classList.remove('hidden');
+    }
+
+    function closeMemberModal() {
+      document.getElementById('memberModal').classList.add('hidden');
+      renderBillingTab();
+    }
+
+    function renderMemberListInModal() {
+      const container = document.getElementById('modalMemberList');
+      container.innerHTML = '';
+      appState.members.forEach((m) => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between p-2 bg-sky-50/70 rounded-xl text-xs";
+        item.innerHTML = `
+          <span class="font-bold text-slateText">👤 ${m}</span>
+          ${appState.members.length > 1 ? `
+            <button onclick="removeMember('${m}')" class="text-red-400 hover:text-red-600 font-bold px-1.5 py-0.5 text-[11px]">刪除</button>
+          ` : ''}
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function addMember() {
+      const input = document.getElementById('newMemberInput');
+      const name = input.value.trim();
+      if (!name) return;
+      if (appState.members.includes(name)) {
+        showToast('該成員名字已存在！', '⚠️');
+        return;
+      }
+      appState.members.push(name);
+      input.value = '';
+      renderMemberListInModal();
+      renderBillingTab();
+      saveState();
+      showToast(`已新增成員：${name}`, '☁️');
+    }
+
+    function removeMember(name) {
+      if (appState.members.length <= 1) {
+        showToast('旅伴團隊至少需要保留 1 人！', '⚠️');
+        return;
+      }
+      showCustomConfirm('移除旅伴', `確定要將「${name}」從成員名單移除嗎？`, () => {
+        appState.members = appState.members.filter(m => m !== name);
+        renderMemberListInModal();
+        renderBillingTab();
+        saveState();
+        showToast(`已移除成員：${name}`, '🗑️');
+      });
+    }
+
+    function exportBillText() {
+      const { transactions } = calculateDebtSettlement();
+      let text = `☁️【關西藍天輕旅 9D8N 結算清單】☁️️\n`;
+      text += `基準匯率：100 JPY ≈ ${(appState.baseRate * 100).toFixed(2)} HKD\n`;
+      text += `結算時間：${new Date().toLocaleString()}\n`;
+      text += `------------------------------------\n`;
+
+      text += `📌【最終應還款方案（誰付誰）】：\n`;
+      if (transactions.length === 0) {
+        text += `🎉 所有帳目已結清或目前無任何欠款！\n`;
+      } else {
+        transactions.forEach(t => {
+          text += `👉 ${t.from} 應付給 ${t.to}：¥${t.amountJPY.toLocaleString()} (約 HK$ ${t.amountHKD})\n`;
+        });
+      }
+
+      text += `------------------------------------\n`;
+      text += `🧾【消費未結清明細】：\n`;
+      const activeExpenses = appState.expenses.filter(e => !e.settled);
+      if (activeExpenses.length === 0) {
+        text += `（無未結清項目）\n`;
+      } else {
+        activeExpenses.forEach((e, idx) => {
+          text += `${idx + 1}. ${e.title} : ${e.currency === 'JPY' ? '¥' + e.amount : 'HK$' + e.amount} (由 ${e.payer} 付)\n`;
+        });
+      }
+
+      document.getElementById('exportTextContent').value = text;
+      document.getElementById('exportTextModal').classList.remove('hidden');
+    }
+
+    function closeExportTextModal() {
+      document.getElementById('exportTextModal').classList.add('hidden');
+    }
+
+    function copyExportText() {
+      const txt = document.getElementById('exportTextContent');
+      txt.select();
+      try {
+        document.execCommand('copy');
+        showToast('已複製結算明細到剪貼簿！', '📋');
+      } catch (err) {
+        showToast('複製失敗，請手動複製', '⚠️');
+      }
+    }
+
+    function generateReceiptImage() {
+      const canvas = document.getElementById('receiptCanvas');
+      const ctx = canvas.getContext('2d');
+      const { transactions } = calculateDebtSettlement();
+
+      // Sky gradient background
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#E1F0FE');
+      grad.addColorStop(1, '#FFFCE1');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Cute Blue Border
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#BAE0FD';
+      ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
+
+      // Inner White Card
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.roundRect(40, 40, canvas.width - 80, canvas.height - 80, 24);
+      ctx.fill();
+
+      // Header Banner (Sky Blue)
+      ctx.fillStyle = '#38A4F8';
+      ctx.beginPath();
+      ctx.roundRect(65, 65, canvas.width - 130, 115, 20);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 34px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('☁️ 關西藍天輕旅 分帳結算收據', canvas.width / 2, 120);
+
+      ctx.fillStyle = '#FEF082';
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(`基準匯率 100 JPY ≈ ${(appState.baseRate * 100).toFixed(2)} HKD`, canvas.width / 2, 156);
+
+      // Section 1: Who owes Whom
+      let y = 230;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#2C3E50';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText('⭐ 智能結算方案（誰應付誰）', 65, y);
+      y += 15;
+
+      ctx.strokeStyle = '#E1F0FE';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(65, y);
+      ctx.lineTo(canvas.width - 65, y);
+      ctx.stroke();
+      y += 40;
+
+      if (transactions.length === 0) {
+        ctx.fillStyle = '#6B7E93';
+        ctx.font = 'italic 22px sans-serif';
+        ctx.fillText('🎉 所有帳目已結清，旅伴無任何欠款！', 75, y);
+        y += 50;
+      } else {
+        transactions.forEach(t => {
+          ctx.fillStyle = '#F0F8FF';
+          ctx.beginPath();
+          ctx.roundRect(65, y - 26, canvas.width - 130, 58, 14);
+          ctx.fill();
+
+          ctx.fillStyle = '#2C3E50';
+          ctx.font = 'bold 22px sans-serif';
+          ctx.fillText(`☀️ ${t.from} 應付給 ${t.to}`, 85, y + 10);
+
+          ctx.fillStyle = '#0E86E7';
+          ctx.textAlign = 'right';
+          ctx.fillText(`¥${t.amountJPY.toLocaleString()} (HK$ ${t.amountHKD})`, canvas.width - 85, y + 10);
+          ctx.textAlign = 'left';
+          y += 72;
+        });
+      }
+
+      // Section 2: Items included
+      y += 20;
+      ctx.fillStyle = '#2C3E50';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText('📜 本次結算包含項目', 65, y);
+      y += 15;
+
+      ctx.beginPath();
+      ctx.moveTo(65, y);
+      ctx.lineTo(canvas.width - 65, y);
+      ctx.stroke();
+      y += 40;
+
+      const activeExpenses = appState.expenses.filter(e => !e.settled).slice(0, 6);
+      if (activeExpenses.length === 0) {
+        ctx.fillStyle = '#6B7E93';
+        ctx.font = '22px sans-serif';
+        ctx.fillText('(無未結清項目)', 75, y);
+        y += 40;
+      } else {
+        activeExpenses.forEach(exp => {
+          ctx.fillStyle = '#2C3E50';
+          ctx.font = '20px sans-serif';
+          ctx.fillText(`• ${exp.title} (${exp.payer} 先付)`, 75, y);
+
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#6B7E93';
+          ctx.fillText(exp.currency === 'JPY' ? `¥${exp.amount.toLocaleString()}` : `HK$${exp.amount}`, canvas.width - 75, y);
+          ctx.textAlign = 'left';
+          y += 42;
+        });
+      }
+
+      // Footer
+      ctx.fillStyle = '#6B7E93';
+      ctx.font = '18px sans-serif';
+      ctx.textAlign = 'center';
+      const nowStr = new Date().toLocaleString();
+      ctx.fillText(`生成時間：${nowStr} • 關西 9D8N 旅程備忘`, canvas.width / 2, canvas.height - 65);
+
+      const dataUrl = canvas.toDataURL('image/png');
+      const img = document.getElementById('receiptPreviewImg');
+      const downloadLink = document.getElementById('receiptDownloadLink');
+      img.src = dataUrl;
+      downloadLink.href = dataUrl;
+
+      document.getElementById('receiptImageModal').classList.remove('hidden');
+    }
+
+    function closeReceiptImageModal() {
+      document.getElementById('receiptImageModal').classList.add('hidden');
+    }
+
+    function updateConverterUI() {
+      const input = document.getElementById('baseRateInput');
+      const label = document.getElementById('currentRateLabel');
+      if (input) input.value = appState.baseRate.toFixed(4);
+      if (label) label.innerText = `100 JPY ≈ ${(appState.baseRate * 100).toFixed(2)} HKD`;
+
+      const jpyVal = document.getElementById('converterJPY').value || 1000;
+      calcJPYtoHKD(jpyVal);
+      renderShoppingCheatSheet();
+    }
+
+    function handleBaseRateChange(val) {
+      const rate = parseFloat(val);
+      if (!isNaN(rate) && rate > 0) {
+        appState.baseRate = rate;
+        document.getElementById('currentRateLabel').innerText = `100 JPY ≈ ${(rate * 100).toFixed(2)} HKD`;
+        calcJPYtoHKD(document.getElementById('converterJPY').value);
+        renderShoppingCheatSheet();
+        saveState();
+      }
+    }
+
+    function setQuickRate(rate) {
+      appState.baseRate = rate;
+      document.getElementById('baseRateInput').value = rate.toFixed(4);
+      handleBaseRateChange(rate);
+      showToast(`匯率已更新為 1 JPY = ${rate} HKD`, '💱');
+    }
+
+    function calcJPYtoHKD(jpyVal) {
+      const hkdInput = document.getElementById('converterHKD');
+      const val = parseFloat(jpyVal);
+      if (isNaN(val) || val <= 0) {
+        hkdInput.value = '';
+        return;
+      }
+      hkdInput.value = (val * appState.baseRate).toFixed(1);
+    }
+
+    function calcHKDtoJPY(hkdVal) {
+      const jpyInput = document.getElementById('converterJPY');
+      const val = parseFloat(hkdVal);
+      if (isNaN(val) || val <= 0 || appState.baseRate <= 0) {
+        jpyInput.value = '';
+        return;
+      }
+      jpyInput.value = Math.round(val / appState.baseRate);
+    }
+
+    function renderShoppingCheatSheet() {
+      const sheet = document.getElementById('quickCheatSheet');
+      if (!sheet) return;
+      sheet.innerHTML = '';
+
+      const amounts = [500, 1000, 3000, 5000, 10000, 20000, 30000, 50000];
+      amounts.forEach(yen => {
+        const hkd = (yen * appState.baseRate).toFixed(0);
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center bg-sky-50 px-2.5 py-1.5 rounded-xl border border-sky-100";
+        div.innerHTML = `
+          <span class="font-bold text-sky-700">¥${yen.toLocaleString()}</span>
+          <span class="text-slateMuted font-bold">≈ HK$ ${hkd}</span>
+        `;
+        sheet.appendChild(div);
+      });
+    }
+
+    function exportJSONBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `Kansai_Sky_Trip_Backup_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('備份檔已開始下載！', '📥');
+    }
+
+    function importJSONBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && imported.itinerary && Array.isArray(imported.itinerary)) {
+            appState = { ...appState, ...imported };
+            saveState();
+            renderDayPills();
+            renderCurrentDayDetails();
+            renderBillingTab();
+            updateConverterUI();
+            showToast('備份資料已成功還原！', '🎉');
+          } else {
+            showToast('檔案格式不合符規範！', '⚠️');
+          }
+        } catch (err) {
+          showToast('無法讀取該備份檔案！', '⚠️');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function confirmResetDefaults() {
+      showCustomConfirm('重置為預設行程', '這將會清除您目前自訂的所有行程與記帳，恢復為原裝 9 日 8 夜行程，確定重置嗎？', () => {
+        appState.itinerary = JSON.parse(JSON.stringify(DEFAULT_ITINERARY));
+        appState.expenses = [];
+        appState.settlementHistory = [];
+        appState.members = [...DEFAULT_MEMBERS];
+        appState.baseRate = 0.0520;
+        appState.activeDay = 1;
+        saveState();
+        renderDayPills();
+        renderCurrentDayDetails();
+        renderBillingTab();
+        updateConverterUI();
+        showToast('已成功重置為預設資料！', '🔄');
+      });
+    }
+
+    let confirmCallback = null;
+    function showCustomConfirm(title, message, onConfirm) {
+      const modal = document.getElementById('confirmModal');
+      document.getElementById('confirmModalTitle').innerText = title;
+      document.getElementById('confirmModalDesc').innerText = message;
+      confirmCallback = onConfirm;
+      modal.classList.remove('hidden');
+    }
+
+    function closeConfirmModal(proceed) {
+      const modal = document.getElementById('confirmModal');
+      modal.classList.add('hidden');
+      if (proceed && typeof confirmCallback === 'function') {
+        confirmCallback();
+      }
+      confirmCallback = null;
+    }
+
+    document.getElementById('confirmModalActionBtn').addEventListener('click', () => {
+      closeConfirmModal(true);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedState();
+      renderDayPills();
+      renderCurrentDayDetails();
+      renderBillingTab();
+      updateConverterUI();
+      switchTab(appState.activeTab || 'itinerary');
+      updateSaveIndicator(true);
+    });
+  </script>
+</body>
+</html>
